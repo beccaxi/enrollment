@@ -370,23 +370,15 @@ summary {
 
 
 <pre class="r"><code>x &lt;- read_excel(path = &quot;class_enrollment_summary_by_term2.18.20.xlsx&quot;,
-                skip = 3) %&gt;%
+                skip = 3) 
+
+y &lt;- x %&gt;%
   clean_names() %&gt;% 
-  filter(course_department == &quot;Government&quot;) %&gt;%
-  arrange(desc(total)) %&gt;%
-  slice(1:5) %&gt;%
-  select(course_title, course_name, instructor_full_name, total) %&gt;% 
-  gt() %&gt;% 
-    tab_header(
-      title = &quot;Top Five Government Courses&quot;,
-      subtitle = &quot;(as of February 2020)&quot;
-    ) %&gt;% 
-    cols_label(
-      course_title = &quot;Course Title&quot;,
-      course_name = &quot;Course Name&quot;,
-      instructor_full_name = &quot;Instructor&quot;,
-      total = &quot;Total Enrollment&quot;
-    )</code></pre>
+  filter(!is.na(course_name)) %&gt;%
+  arrange(desc(total)) %&gt;% 
+  group_by(course_department) %&gt;% 
+  summarize(sum = sum(total)) %&gt;% 
+  arrange(desc(sum))</code></pre>
 
 
 
